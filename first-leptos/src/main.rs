@@ -1,8 +1,10 @@
 use leptos::*;
 
 #[component]
-fn ProgressBar(progress: ReadSignal<i32>) -> impl IntoView {
-    view! { <progress max="50" value=progress></progress> }
+fn ProgressBar(#[prop(optional)] max: u16, progress: ReadSignal<i32>) -> impl IntoView {
+    // 여기서 T가 아니라 ReadSignal<T>여야 한다. UI가 변경에 반응하도록 지시하는 방법은, signal 타입을 전달하는 것이다.
+    // optional props로 전달하려면 prop 앞에 #[prop(optional)]를 붙여야 한다. 너무 길다..
+    view! { <progress max=max value=progress></progress> }
 }
 
 #[component] // 모든 컴포넌트 정의와 마찬가지로, `#[component]` 매크로로 시작함.
@@ -19,7 +21,7 @@ fn App() -> impl IntoView {
             "Click me: "
             {count}
         </button>
-        <ProgressBar progress=count/>
+        <ProgressBar progress=count max=50/>
     }
 
     // count라는 현재 signal을 받아올 때,  nightly Rust에서는 count()로도 사용 가능. 원래는 count.get()임.
@@ -38,7 +40,7 @@ fn ButtonWithProgressBar() -> impl IntoView {
     let double_x = move || x() * 2;
 
     view! {
-        <ProgressBar progress=x/>
+        <ProgressBar progress=x max=10/>
         <br/>
         <p>"Double Count: " {double_x}</p>
         <br/>
